@@ -13,11 +13,15 @@ function Client:initialize(options)
   -- client handles changes between state changes,
 end
 
+function Client:log(msg, level)
+  love.event.push('log', msg, 'CLIENT', level)
+end
+
 function Client:setState(state)
   if state.super == states.Base then
     self.gameState = state
   else
-    love.event.push('log', 'Function setState(s) was called with a non state variable.', 'CLIENT', 3)
+    self.log('Function setState(s) was called with a non state variable.', 3)
   end
 end
 

@@ -3,25 +3,24 @@ local State = {}
 
 local Base = class('State')
 
-function Base:initialize(id)
+function Base:initialize(id, client)
+  if id == nil then error('State was initialized with nil id.') end
+  if tostring(client.class) ~= 'class Client' then error('State '..id..' instance not client.') end
   self.id = id
+  self.client = client
 end
 
 function Base:draw() end
 
 function Base:update(dt) end
 
-function Base.static:sublassed(other)
-  print('CLIENT[DEBUG]: Created subclass of State > '..other.name..' with id of '..other.id)
-end
-
 local Timer = require 'client.timer'
 
 local Splash = class('StateSplash', Base)
 
-function Splash:initialize()
-  Base.initialize(self, 0)
-  self.timer = Timer(5, function() love.event.push('log', 'Ayy lmaoo 5 seconds', 'CLIENT') end)
+function Splash:initialize(client)
+  Base.initialize(self, 0, client)
+  self.timer = Timer(5, function() client.log:info('Ayy lmao 5 seconds.') end)
 end
 
 function Splash:draw()
@@ -42,8 +41,8 @@ end
 
 local Load = class('StateLoad', Base)
 
-function Load:initialize(text, loader)
-  Base.initialize(self, 1)
+function Load:initialize(client, text, loader)
+  Base.initialize(self, 1, client)
   self.text = text
   self.loader = loader -- function must return load percent from 0 - 1 or -1 and must accept dTime as argument
   self.percent = 0 -- if -1 then unknown load time otherwise from 0 to 1
@@ -64,8 +63,8 @@ end
 
 local Menu = class('StateMenu', Base)
 
-function Menu:initialize()
-  Base.initialize(self, 2)
+function Menu:initialize(client)
+  Base.initialize(self, 2, client)
   -- init buttons
   -- PLAY
   -- opens a server browser to either join or host a game
@@ -87,8 +86,8 @@ end
 
 local Game = class('StateGame', Base)
 
-function Game:initialize()
-  Base.initialize(self, 3)
+function Game:initialize(client)
+  Base.initialize(self, 3, client)
 
 end
 

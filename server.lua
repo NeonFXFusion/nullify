@@ -2,10 +2,12 @@ local class = require 'middleclass'
 local Server = class('Server')
 
 local sock = require 'sock'
+local Logger = require 'util.logger'
 
 function Server:initialize(ip, port, options)
   self.ip = ip
   self.port = port
+  self.log = Logger:new('SERVER')
   self.options.serverName = 'Server'
   self.options.serverMOTD = 'How are you today?'
   self.options.maxPlayers = 8

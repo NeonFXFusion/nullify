@@ -33,25 +33,12 @@ local class = require 'middleclass'
 
 local Client = require 'client'
 local Server = require 'server'
+local Logger = require 'util.logger'
+
+local log = Logger:new('BASE')
 
 function love.load()
-  love.handlers.log = function(msg, src, level)
-    if src == nil then src = 'BASE' end
-    if level == 1 then
-      level = 'DEBUG'
-    elseif level == 2 then
-      level = 'WARN'
-    elseif level == 3 then
-      level = 'ERROR'
-      print('['..os.date('%H:%M:%S')..']['..src..']['..level..']: '..msg)
-      error(msg)
-      return
-    else
-      level = 'INFO'
-    end
-    print('['..os.date('%H:%M:%S')..']['..src..']['..level..']: '..msg)
-  end
-  love.event.push('log', 'Loading...')
+  log:info('Loading...')
   -- TODO: if any console arguments intended for client pass them through
   client = Client:new()
   love.handlers.clientstate = function(state)
@@ -63,7 +50,7 @@ function love.load()
   love.handlers.serverstop = function()
 
   end
-  love.event.push('log', 'Done loading.')
+  log:info('Done loading.')
 end
 
 function love.draw()
@@ -76,4 +63,9 @@ end
 
 function love.focus()
 
+end
+
+function love.quit()
+  log:info('Quitting :(')
+  return false
 end

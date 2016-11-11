@@ -3,25 +3,23 @@ local Client = class('Client')
 
 local sock = require 'sock'
 local states = require 'client.states'
+local Logger = require 'util.logger'
 
 local debug = true
 
 function Client:initialize(options)
   self.options = options
-  self.gameState = states.Splash:new()
-  love.event.push('log', 'Started default state.', 'CLIENT')
+  self.gameState = states.Splash:new(self)
+  self.log = Logger:new('CLIENT')
+  self.log:info('Started default state.')
   -- client handles changes between state changes,
-end
-
-function Client:log(msg, level)
-  love.event.push('log', msg, 'CLIENT', level)
 end
 
 function Client:setState(state)
   if state.super == states.Base then
     self.gameState = state
   else
-    self.log('Function setState(s) was called with a non state variable.', 3)
+    self.log:info('Started default state.')
   end
 end
 

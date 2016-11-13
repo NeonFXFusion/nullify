@@ -17,10 +17,6 @@ function Server:initialize(ip, port, options)
 
 end
 
-function Server:log(msg, level)
-  love.event.push('log', msg, 'SERVER', level)
-end
-
 function Server:start()
   self.server = sock.newServer(self.ip, self.port, self.options.maxPlayers + self.options.maxSpectators+1)
   self.server:on('connect', function(data, client)

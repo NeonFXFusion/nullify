@@ -30,10 +30,11 @@ end
 function Splash:update(dt)
   if self.timer == nil then return end
   if self.timer:finished() then
-      -- love.event.push('clientstate', state)
-      -- self.timer.destroy()
-      -- push Load state with a function that reads the config and then pushes
-      -- main menu state with the read options.
+    local state = State.Menu:new(self.client)
+    self.client:setState(state)
+    -- self.timer.destroy()
+    -- push Load state with a function that reads the config and then pushes
+    -- main menu state with the read options.
   else
     self.timer:update(dt)
   end
@@ -61,6 +62,8 @@ function Load:update(dt)
   end
 end
 
+local GUI = require 'client.gui'
+
 local Menu = class('StateMenu', Base)
 
 function Menu:initialize(client)
@@ -74,13 +77,17 @@ function Menu:initialize(client)
   -- LOADOUT
   -- edits the loadout of a character
   -- EXIT
+  -- {0,0,100,100}
+  self.root = GUI.Panel:new('root', 100, 100)
 end
 
 function Menu:draw()
+  self.root:draw(0+10, 0+10)
   -- draw GUI
 end
 
 function Menu:update(dt)
+  self.root:update(dt) -- minimal updates
   -- update GUI check for clicks etc
 end
 

@@ -41,9 +41,6 @@ function love.load()
   log:info('Loading...')
   -- TODO: if any console arguments intended for client pass them through
   client = Client:new()
-  love.handlers.clientstate = function(state)
-    client:setState(state)
-  end
   love.handlers.serverstart = function(ip, port, serverName, serverMOTD, gamemode)
 
   end

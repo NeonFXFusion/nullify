@@ -16,10 +16,10 @@ function Client:initialize(options)
 end
 
 function Client:setState(state)
-  if state.super == states.Base then
+  if state.class.super == states.Base then
     self.gameState = state
   else
-    self.log:info('Started default state.')
+    self.log:error('Argument was not instance of StateBase')
   end
 end
 

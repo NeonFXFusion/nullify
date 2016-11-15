@@ -19,10 +19,14 @@ function Base:update(dt) end -- updating only when element active
 
 local Panel = class('GuiPanel', Base) -- any gui element must be in a Panel
 
-function Panel:initialize(id, w, h)
+function Panel:initialize(id, dim, margin)
   Base.initialize(self, 0, id)
-  self.w = w
-  self.h = h
+  self.x = dim[0]
+  self.y = dim[1]
+  self.w = dim[2]
+  self.h = dim[3]
+  self.align = align
+  self.margin = margin
   self.subelem = {} -- a table containing all of the subelements MUST BE INSTANCE OF GuiBase CLASS
 end
 

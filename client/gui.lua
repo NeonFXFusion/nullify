@@ -31,7 +31,34 @@ function Panel:initialize(id, dim, margin)
 end
 
 function Panel:draw(x, y)
-  love.graphics.rectangle('line', x, y, x+self.w, y+self.h)
+  local lx,ly,lw,lh
+  -- TODO: OPTIMIZE THIS 
+  if split(self.x, 'p')[1] == 'g' then
+    -- lx = width * ((self.x + marginx) / 100)
+    lx = love.graphics.getWidth() * (self.x / 100)  
+  elseif split(self.x, 'p')[1] == 'l' then
+    -- same but using parent width as base
+  end
+  if split(self.w, 'p')[1] == 'g' then
+    -- lw = (self.w - marginx - marginh) / 100 * width
+    -- lw = width * ((self.w - marginx - marginh) / 100)
+    lw = love.graphics.getWidth() * (self.w / 100)  
+  elseif split(self.w, 'p')[1] == 'l' then
+    -- same but using parent width as base
+  end
+  if split(self.y, 'p')[1] == 'g' then
+    ly = love.graphics.getHeight() * (self.y / 100)  
+  elseif split(self.y, 'p')[1] == 'l' then
+    -- same but using parent width as base
+  end
+  if split(self.h, 'p')[1] == 'g' then
+    lh = love.graphics.getHeight() * (self.h / 100)  
+  elseif split(self.h, 'p')[1] == 'l' then
+    -- same but using parent width as base
+  end
+  -- margins are already in percantage so margin = height * margin/100 or something...
+  -- x + marginx, y + marginy, w - marginx - marginw, h - marginy - marginh
+  love.graphics.rectangle('line', lx, ly, lw, lh)
 end
 
 function Panel:update(dt)

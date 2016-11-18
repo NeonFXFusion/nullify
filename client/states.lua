@@ -77,7 +77,6 @@ function Menu:initialize(client)
   -- LOADOUT
   -- edits the loadout of a character
   -- EXIT
-  -- {0,0,100,100}
   self.root = GUI.Panel:new('root', {'0','0','100pg','100pg'}, {'left', 'top'}, {'2pg','2pg','2pg','2pg'})
 end
 

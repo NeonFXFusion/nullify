@@ -14,7 +14,7 @@ function Base:draw() end
 
 function Base:update(dt) end
 
-local Timer = require 'client.timer'
+local Timer = require 'util.timer'
 
 local Splash = class('StateSplash', Base)
 
@@ -36,6 +36,9 @@ function Splash:update(dt)
     -- push Load state with a function that reads the config and then pushes
     -- main menu state with the read options.
   else
+    if love.keyboard.isDown('escape') then
+      self.timer:finish()
+    end
     self.timer:update(dt)
   end
 end
@@ -63,6 +66,7 @@ function Load:update(dt)
 end
 
 local GUI = require 'client.gui'
+local sock = require 'sock'
 
 local Menu = class('StateMenu', Base)
 
@@ -77,7 +81,14 @@ function Menu:initialize(client)
   -- LOADOUT
   -- edits the loadout of a character
   -- EXIT
-  self.root = GUI.Panel:new('root', {'0','0','100pg','100pg'}, {'left', 'top'}, {'2pg','2pg','2pg','2pg'})
+  -- g10 - global 10 percent
+  -- l10 - local 10 percent (calculated from parent position)
+  -- p10 - 10 pixels
+  -- left, right, center; top, bottom, center
+  -- {'alignX','alignY','width','height'}, margins {x, y, w, h}
+  self.root = GUI.Panel:new('root', {'100g','100g'}, {'3g','4g','3g','4g'})
+  -- the only gui items needed are a root panel, buttons, scrollbars, and icons (for items etc)ž
+  -- gui should be done as immersive
 end
 
 function Menu:draw()

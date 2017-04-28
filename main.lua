@@ -40,8 +40,9 @@ local log = Logger:new('BASE')
 function love.load()
   log:info('Loading...')
   -- TODO: if any console arguments intended for client pass them through
-  client = Client:new()
-  love.handlers.serverstart = function(ip, port, serverName, serverMOTD, gamemode)
+  love.client = Client:new()
+  -- injected handlers for starting and stopping the internal server
+  love.handlers.serverstart = function(ip, port, options)
 
   end
   love.handlers.serverstop = function()
@@ -51,11 +52,11 @@ function love.load()
 end
 
 function love.draw()
-  client:draw()
+  love.client:draw()
 end
 
 function love.update(dt)
-  client:update(dt)
+  love.client:update(dt)
 end
 
 function love.focus()

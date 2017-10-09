@@ -11,7 +11,6 @@ function Base:initialize(id, client)
 end
 
 function Base:draw() end
-
 function Base:update(dt) end
 
 local Timer = require 'util.timer'
@@ -65,7 +64,6 @@ function Load:update(dt)
   end
 end
 
-local GUI = require 'client.gui'
 local sock = require 'sock'
 
 local Menu = class('StateMenu', Base)
@@ -86,18 +84,15 @@ function Menu:initialize(client)
   -- p10 - 10 pixels
   -- left, right, center; top, bottom, center
   -- {'alignX','alignY','width','height'}, margins {x, y, w, h}
-  self.root = GUI.Panel:new('root', {'100g','100g'}, {'3g','4g','3g','4g'})
   -- the only gui items needed are a root panel, buttons, scrollbars, and icons (for items etc)ž
   -- gui should be done as immersive
 end
 
 function Menu:draw()
-  self.root:draw(0, 0)
   -- draw GUI
 end
 
 function Menu:update(dt)
-  self.root:update(dt) -- minimal updates
   -- update GUI check for clicks etc
 end
 
@@ -105,7 +100,18 @@ local Game = class('StateGame', Base)
 
 function Game:initialize(client)
   Base.initialize(self, 3, client)
-
+  self.map = {
+    {1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1}
+  }
 end
 
 function Game:draw()

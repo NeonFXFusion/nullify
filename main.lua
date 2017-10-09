@@ -59,8 +59,8 @@ function love.update(dt)
   love.client:update(dt)
 end
 
-function love.focus()
-
+function love.focus(focus)
+  -- body...
 end
 
 function love.quit()

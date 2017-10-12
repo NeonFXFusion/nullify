@@ -29,7 +29,7 @@ end
 function Splash:update(dt)
   if self.timer == nil then return end
   if self.timer:finished() then
-    local state = State.Menu:new(self.client)
+    local state = State.Game:new(self.client)
     self.client:setState(state)
     -- self.timer.destroy()
     -- push Load state with a function that reads the config and then pushes
@@ -66,55 +66,27 @@ end
 
 local sock = require 'sock'
 
-local Menu = class('StateMenu', Base)
-
-function Menu:initialize(client)
-  Base.initialize(self, 2, client)
-  -- init buttons
-  -- PLAY
-  -- opens a server browser to either join or host a game
-  -- host button opens a menu to set the server settings
-  -- SETTINGS
-  -- opens a menu to disable particles, rebind keys etc
-  -- LOADOUT
-  -- edits the loadout of a character
-  -- EXIT
-  -- g10 - global 10 percent
-  -- l10 - local 10 percent (calculated from parent position)
-  -- p10 - 10 pixels
-  -- left, right, center; top, bottom, center
-  -- {'alignX','alignY','width','height'}, margins {x, y, w, h}
-  -- the only gui items needed are a root panel, buttons, scrollbars, and icons (for items etc)ž
-  -- gui should be done as immersive
-end
-
-function Menu:draw()
-  -- draw GUI
-end
-
-function Menu:update(dt)
-  -- update GUI check for clicks etc
-end
-
 local Game = class('StateGame', Base)
 
 function Game:initialize(client)
   Base.initialize(self, 3, client)
   self.map = {
     {1,1,1,1,1,1,1,1,1,1},
+    {1,2,2,2,2,2,2,2,2,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1}
+    {1,0,0,0,0,0,0,0,0,1}
+
   }
 end
 
+-- Map:draw() Entity:draw() UI:draw()
 function Game:draw()
+
 
 end
 
@@ -126,6 +98,8 @@ end
 -- by where the character is going to spawn and all of the entities in
 -- the range of the spawn location then it starts the actual data streams.
 -- Data streams between server and client are the following:
+-- ALSO! If any movement data is off by more than 5% 
+-- (have to test in practice which % is best) kick that nigga
 -- CLIENT > SERVER: movement data
 -- CLIENT < SERVER: corrections if movement wrong, kick if BS data (wall clipping, out of bounds, etc)
 -- C > S: action data (action click, action use item)

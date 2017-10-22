@@ -65,29 +65,91 @@ function Load:update(dt)
 end
 
 local sock = require 'sock'
+local Map = require 'util.map'
 
 local Game = class('StateGame', Base)
 
 function Game:initialize(client)
   Base.initialize(self, 3, client)
-  self.map = {
-    {1,1,1,1,1,1,1,1,1,1},
-    {1,2,2,2,2,2,2,2,2,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1}
-
+  local w = 100
+  local h = 100
+  self.data = {}
+  for y=1,h do
+    self.data[y] = {}
+    for x=1,w do
+      if y == 1 or y == h then
+        self.data[y][x] = {1}
+      elseif y == 1 and x == 1 or x == x then
+        self.data[y][x] = {1}
+      else
+        self.data[y][x] = {0}
+      end
+    end
+  end
+  self.data = {
+    {1,1,1,1,1},
+    {1,0,0,0,1},
+    {1,0,1,0,1},
+    {1,0,0,0,1},
+    {1,1,1,1,1}
   }
 end
-
+-- 1 - no connections
 -- Map:draw() Entity:draw() UI:draw()
+offset = 100
 function Game:draw()
 
+  love.graphics.print(#self.data,200, 0)
+  love.graphics.print(#self.data[1],200, 10)
+  for y=1, #self.data do
+    for x=1, #self.data[1] do
+      if self.data[y][x] == 0 then
 
+      elseif self.data[y][x] == 1 then
+        love.graphics.setColor(255,255,255)
+        love.graphics.setLineStyle('rough', 1)
+        --love.graphics.line(100+x, 100, 100+x+40, 100)
+        if self.data[y][x-1] == 1 and self.data[y][x+1] == 1 then
+          love.graphics.line(offset+x, offset, offset+x+40, offset)
+          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
+        elseif self.data[y][x-1] == 1 then
+          love.graphics.line(offset+x, offset, offset+x+40, offset)
+          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
+          love.graphics.line(offset+x+40, offset, offset+x+40, offset+40)
+        elseif self.data[y][x+1] == 1 then
+          love.graphics.line(offset+x, offset, offset+x+40, offset)
+          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
+          love.graphics.line(offset+x, offset, offset+x, offset+41)
+        end
+
+      --  if self.data[y-1][x] == 1 then
+
+        --end
+      --  if self.data[y+1][x] == 1 then
+
+      --  end
+        --[[if self.data[y+1][x+1] == 1 then
+
+        end
+        if self.data[y+1][x-1] == 1 then
+
+        end
+        if self.data[y-1][x-1] == 1 then
+
+        end
+        if self.data[y-1][x+1] == 1 then
+
+        end ]]
+
+      elseif self.data[y][x] == 2 then
+        love.graphics.setColor(240,240,240)
+        love.graphics.rectangle('fill', x, y, 40,40)
+        love.graphics.setColor(230,230,230)
+        love.graphics.rectangle('fill', x, y, 40,20)
+        love.graphics.setColor(255,255,255)
+      end
+    end
+  end
 end
 
 function Game:update(dt)
@@ -98,7 +160,7 @@ end
 -- by where the character is going to spawn and all of the entities in
 -- the range of the spawn location then it starts the actual data streams.
 -- Data streams between server and client are the following:
--- ALSO! If any movement data is off by more than 5% 
+-- ALSO! If any movement data is off by more than 5%
 -- (have to test in practice which % is best) kick that nigga
 -- CLIENT > SERVER: movement data
 -- CLIENT < SERVER: corrections if movement wrong, kick if BS data (wall clipping, out of bounds, etc)

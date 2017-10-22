@@ -8,21 +8,37 @@ function Complex:initialize(seed)
 
 end
 
-local Level = class('Level')
+local District = class('District')
 
-function Level:initialize(seed, rank, size)
-  self.seed = seed or error('No seed was given to room.')
+function District:initialize(seed, rank, size)
+  self.seed = seed or 0
   self.rank = rank or 1
   self.size = size or 1
-  self.data = nil
+  self.tiles = nil
   self.canvas = nil
 end
 
-function Level:generate()
-
+function District:generate()
+  -- {type, metadata}
+  -- {0, {'decor':0}}
+  math.randomseed(self.seed)
+  local w = 100
+  local h = 100
+  for y=1,h do
+    self.tiles[y] = {}
+    for x=1,w do
+      if y == 1 or y == h then
+        self.tiles[y][x] = {1}
+      elseif y == 1 and x == 1 or x == x then
+        self.tiles[y][x] = {1}
+      else
+        self.tiles[y][x] = {0}
+      end
+    end
+  end
 end
 
-function Level:draw()
+function District:draw()
   for y=1, #self.data do
     for x=1, #self.data[1] do
       if self.data[y][x] == 0 then
@@ -42,3 +58,8 @@ function Level:draw()
     end
   end
 end
+
+Map.Complex = Complex
+Map.District = District
+
+return Map;

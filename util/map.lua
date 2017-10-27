@@ -8,6 +8,29 @@ function Complex:initialize(seed)
 
 end
 
+local Tree = class('Tree')
+
+function Tree:initialize(leaf)
+  self.leaf = leaf
+  self.lchild = nil
+  self.rchild = nil
+end
+
+function Tree:leaves()
+  if self.lchild == nil and self.rchild == nil then
+    return {self.leaf}
+  else
+    return nil
+  end
+end
+
+local Tile = class('Tile')
+
+function Tile:initialize(type, properties)
+  self.type = type
+  self.properties = properties
+end
+
 local District = class('District')
 
 function District:initialize(seed, rank, size)
@@ -15,15 +38,15 @@ function District:initialize(seed, rank, size)
   self.rank = rank or 1
   self.size = size or 1
   self.tiles = nil
+  self.points = nil
   self.canvas = nil
 end
 
 function District:generate()
-  -- {type, metadata}
-  -- {0, {'decor':0}}
   math.randomseed(self.seed)
-  local w = 100
-  local h = 100
+  local w = 1000
+  local h = 1000
+  self.tiles = {}
   for y=1,h do
     self.tiles[y] = {}
     for x=1,w do
@@ -38,26 +61,15 @@ function District:generate()
   end
 end
 
-function District:draw()
-  for y=1, #self.data do
-    for x=1, #self.data[1] do
-      if self.data[y][x] == 0 then
-        love.graphics.setColor(240,240,240)
-        love.graphics.rectangle('fill', x*40, y*40, 40,40)
-        love.graphics.setColor(255,255,255)
-      elseif self.data[y][x] == 1 then
-        love.graphics.rectangle('fill', x*40, y*40, 40,40)
-      elseif self.data[y][x] == 2 then
-        love.graphics.setColor(240,240,240)
-        love.graphics.rectangle('fill', x*40, y*40, 40,40)
-        love.graphics.setColor(230,230,230)
-        love.graphics.rectangle('fill', x*40, y*40, 40,20)
-        love.graphics.setColor(255,255,255)
-
-      end
-    end
-  end
+function District:tile(x, y)
+  return self.tiles[y][x]
 end
+
+function District:draw()
+
+end
+
+
 
 Map.Complex = Complex
 Map.District = District

@@ -87,14 +87,13 @@ function Game:initialize(client)
     end
   end
   self.data = {
-    {1,1,1,1,1},
-    {1,0,0,0,1},
-    {1,0,1,0,1},
-    {1,0,0,0,1},
-    {1,1,1,1,1}
+    {1,1,1,1,1,1,1},
+    {1,0,1,0,1,0,1},
+    {1,0,1,0,0,0,1},
+    {1,0,0,0,1,0,1},
+    {1,1,1,1,1,1,1}
   }
 end
--- 1 - no connections
 -- Map:draw() Entity:draw() UI:draw()
 offset = 100
 function Game:draw()
@@ -103,50 +102,41 @@ function Game:draw()
   love.graphics.print(#self.data[1],200, 10)
   for y=1, #self.data do
     for x=1, #self.data[1] do
+      local bits = {}
+      bits['l'] = self.data[y][x-1] or 0
+      bits['r'] = self.data[y][x+1] or 0
+      if self.data[y-1] then bits['t'] = self.data[y-1][x]  else bits['t'] = 0 end
+      if self.data[y+1] then bits['b'] = self.data[y+1][x] else bits['b'] = 0 end
+
       if self.data[y][x] == 0 then
 
       elseif self.data[y][x] == 1 then
         love.graphics.setColor(255,255,255)
         love.graphics.setLineStyle('rough', 1)
-        --love.graphics.line(100+x, 100, 100+x+40, 100)
-        if self.data[y][x-1] == 1 and self.data[y][x+1] == 1 then
-          love.graphics.line(offset+x, offset, offset+x+40, offset)
-          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
-        elseif self.data[y][x-1] == 1 then
-          love.graphics.line(offset+x, offset, offset+x+40, offset)
-          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
-          love.graphics.line(offset+x+40, offset, offset+x+40, offset+40)
-        elseif self.data[y][x+1] == 1 then
-          love.graphics.line(offset+x, offset, offset+x+40, offset)
-          love.graphics.line(offset+x, offset+40, offset+x+40, offset+40)
-          love.graphics.line(offset+x, offset, offset+x, offset+41)
+
+        if bits['l'] ~= 1 then
+          love.graphics.line(offset+x*40, offset+y*40, offset+x*40, offset+y*40+40)
+        end
+        if bits['r'] ~= 1 then
+          love.graphics.line(offset+x*40+40, offset+y*40, offset+x*40+40, offset+y*40+40)
+        end
+        if bits['t'] ~= 1 then
+          love.graphics.line(offset+x*40-1, offset+y*40, offset+x*40+40, offset+y*40)
+        end
+        if bits['b'] ~= 1 then
+          love.graphics.line(offset+x*40-1, offset+y*40+40, offset+x*40+40, offset+y*40+40)
+          love.graphics.line(offset+x*40-1, offset+y*40+55, offset+x*40+40, offset+y*40+55)
+          if bits['l'] ~= 1 then
+            love.graphics.line(offset+x*40, offset+y*40+55, offset+x*40, offset+y*40)
+          end
+          if bits['r'] ~= 1 then
+            love.graphics.line(offset+x*40+40, offset+y*40+55, offset+x*40+40, offset+y*40)
+          end
         end
 
-      --  if self.data[y-1][x] == 1 then
-
-        --end
-      --  if self.data[y+1][x] == 1 then
-
-      --  end
-        --[[if self.data[y+1][x+1] == 1 then
-
-        end
-        if self.data[y+1][x-1] == 1 then
-
-        end
-        if self.data[y-1][x-1] == 1 then
-
-        end
-        if self.data[y-1][x+1] == 1 then
-
-        end ]]
 
       elseif self.data[y][x] == 2 then
-        love.graphics.setColor(240,240,240)
-        love.graphics.rectangle('fill', x, y, 40,40)
-        love.graphics.setColor(230,230,230)
-        love.graphics.rectangle('fill', x, y, 40,20)
-        love.graphics.setColor(255,255,255)
+
       end
     end
   end

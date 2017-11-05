@@ -12,6 +12,8 @@ function Client:initialize(options)
   self.gameState = states.Splash:new(self)
   self.log = Logger:new('CLIENT')
   self.log:info('Started default state.')
+  love.graphics.setNewFont('res/font/Braciola.ttf', 12)
+
   -- client handles changes between state changes,
 end
 

@@ -166,9 +166,7 @@ function Game:draw()
 
         if bits['r'] == 0 and bits['t'] == 0 then
           love.graphics.line(offset+x*40, offset+y*40, offset+(x+1)*40, offset+(y+1)*40)
-        end
-
-      end
+        end      end
     end
   end
 end

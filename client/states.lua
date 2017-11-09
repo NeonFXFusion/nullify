@@ -91,13 +91,14 @@ function Game:initialize(client)
     {1,0,0,0,0,2,1},
     {1,2,0,0,0,0,1},
     {1,1,2,0,0,0,1},
-    {1,2,1,2,0,0,1},
+    {1,1,1,2,0,0,1},
     {1,0,2,0,0,0,0},
     {1,0,0,0,0,0,1},
     {1,2,0,0,2,0,1},
     {1,2,0,0,2,2,1},
     {1,0,0,0,0,2,1},
     {1,0,0,0,0,0,1},
+    {1,2,0,0,0,2,1},
     {1,1,1,1,1,1,1}
   }
 end
@@ -117,6 +118,7 @@ function Game:draw()
 
       love.graphics.setColor(0,255,0)
       love.graphics.rectangle('line', offset+x*40, offset+y*40, 40, 40)
+      love.graphics.print(self.data[y][x], offset+x*40, offset+y*40)
       if self.data[y][x] == 0 then
 
       elseif self.data[y][x] == 1 then

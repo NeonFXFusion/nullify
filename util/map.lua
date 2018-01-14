@@ -1,8 +1,19 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
 
 require 'util.helper'
 
 local Map = {}
+
+
+-- Types of tiles: 0 air, 1 full block, 2 custom collision
+local Tile = class('Tile')
+
+function Tile:initialize()
+  self.id = id
+  self.type = type
+  self.interact = nil -- or function
+end
+
 
 local Complex = class('Complex')
 

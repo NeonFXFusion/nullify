@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
 
 -- #1 !!!DONE!!! make a config file for love2d to read !!!DONE!!!
 -- #2 make a basic server

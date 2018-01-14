@@ -1,4 +1,6 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
+local moonshine = require 'client.moonshine'
+
 local State = {}
 
 local Base = class('State')
@@ -20,13 +22,30 @@ local Splash = class('StateSplash', Base)
 function Splash:initialize(client)
   Base.initialize(self, 0, client)
   self.timer = Timer(5, function() client.log:info('Ayy lmao 5 seconds.') end)
+  self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
+  self.effect.glow.strength = 10
+  self.effect.chromasep.angle = 0.4
+  self.effect.chromasep.radius = 1.5
+  self.effect.scanlines.thickness = 0.4
 end
 
 function Splash:draw()
   -- opacity +=
+  self.effect(function()
+    local prevf = love.graphics.getFont()
+    love.graphics.setFont(love.graphics.setNewFont('res/font/main.ttf', 60))
+    love.graphics.printf("NULLIFY", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    love.graphics.setFont(prevf)
+  end)
 end
 
 function Splash:update(dt)
+  self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
+  self.effect.glow.strength = 10
+  self.effect.chromasep.angle = 0.4
+  self.effect.chromasep.radius = 1.5
+  self.effect.scanlines.thickness = 0.4
+  self.effect.scanlines.phase = self.timer:elapsed() / 15
   if self.timer == nil then return end
   if self.timer:finished() then
     local state = State.Game:new(self.client)
@@ -64,7 +83,6 @@ function Load:update(dt)
   end
 end
 
-local sock = require 'sock'
 local Map = require 'util.map'
 
 local Game = class('StateGame', Base)
@@ -101,10 +119,16 @@ function Game:initialize(client)
     {1,2,0,0,0,2,1},
     {1,1,1,1,1,1,1}
   }
+  self.effect = moonshine(moonshine.effects.glow)
+  self.effect.glow.strength = 1
+  --self.effect.chromasep.angle = 0
+  --self.effect.chromasep.radius = 1
 end
 -- Map:draw() Entity:draw() UI:draw()
 offset = 100
 function Game:draw()
+  self.effect = moonshine(moonshine.effects.glow)
+  self.effect(function()
 
   love.graphics.print(#self.data,200, 0)
   love.graphics.print(#self.data[1],200, 10)
@@ -117,7 +141,7 @@ function Game:draw()
       if self.data[y+1] then bits['b'] = self.data[y+1][x] else bits['b'] = 0 end
 
       love.graphics.setColor(0,255,0)
-      love.graphics.rectangle('line', offset+x*40, offset+y*40, 40, 40)
+      --love.graphics.rectangle('line', offset+x*40, offset+y*40, 40, 40)
       love.graphics.print(self.data[y][x], offset+x*40, offset+y*40)
       if self.data[y][x] == 0 then
 
@@ -138,7 +162,7 @@ function Game:draw()
           love.graphics.line(offset+x*40, offset+(y+1)*40, offset+(x+1)*40, offset+(y+1)*40)
           love.graphics.line(offset+x*40, offset+(y+1)*40+15, offset+(x+1)*40, offset+(y+1)*40+15)
           if bits['l'] == 0 then
-            love.graphics.line(offset+x*40, offset+(y+1)*40, offset+x*40, offset+(y+1)*40+16)
+            love.graphics.line(offset+x*40, offset+(y+1)*40, offset+x*40, offset+(y+1)*40+15)
           end
           if bits['r'] == 0 then
             love.graphics.line(offset+(x+1)*40, offset+(y+1)*40+15, offset+(x+1)*40, offset+y*40)
@@ -146,7 +170,7 @@ function Game:draw()
         end
 
 
-      elseif self.data[y][x] == 2 then
+      --[[elseif self.data[y][x] == 2 then
         love.graphics.setColor(255,255,255)
         love.graphics.setLineStyle('rough', 1)
 
@@ -168,9 +192,11 @@ function Game:draw()
 
         if bits['r'] == 0 and bits['t'] == 0 then
           love.graphics.line(offset+x*40, offset+y*40, offset+(x+1)*40, offset+(y+1)*40)
-        end      end
+        end]]      
+      end
     end
   end
+  end)
 end
 
 function Game:update(dt)

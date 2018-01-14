@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
 local Timer = class('Timer')
 
 function Timer:initialize(time, callback)

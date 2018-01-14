@@ -1,7 +1,6 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
 local Client = class('Client')
 
-local sock = require 'sock'
 local states = require 'client.states'
 local Logger = require 'util.logger'
 
@@ -12,7 +11,7 @@ function Client:initialize(options)
   self.gameState = states.Splash:new(self)
   self.log = Logger:new('CLIENT')
   self.log:info('Started default state.')
-  love.graphics.setNewFont('res/font/Braciola.ttf', 12)
+  love.graphics.setNewFont('res/font/main.ttf', 12)
 
   -- client handles changes between state changes,
 end

@@ -1,7 +1,7 @@
-local class = require 'middleclass'
+local class = require 'util.middleclass'
 local Server = class('Server')
 
-local sock = require 'sock'
+local sock = require 'util.sock'
 local Logger = require 'util.logger'
 
 function Server:initialize(ip, port, options)

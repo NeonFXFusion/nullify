@@ -3,6 +3,8 @@ local moonshine = require 'client.moonshine'
 
 local State = {}
 
+local options = {}
+
 local Base = class('State')
 
 function Base:initialize(id, client)
@@ -40,12 +42,13 @@ function Splash:draw()
 end
 
 function Splash:update(dt)
-  self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
-  self.effect.glow.strength = 10
-  self.effect.chromasep.angle = 0.4
-  self.effect.chromasep.radius = 1.5
-  self.effect.scanlines.thickness = 0.4
-  self.effect.scanlines.phase = self.timer:elapsed() / 15
+  if true then
+    self.effect.glow.strength = 10
+    self.effect.chromasep.angle = 0.4
+    self.effect.chromasep.radius = 1.5
+    self.effect.scanlines.thickness = 0.4
+    self.effect.scanlines.phase = self.timer:elapsed() / 15
+  end
   if self.timer == nil then return end
   if self.timer:finished() then
     local state = State.Game:new(self.client)
@@ -121,15 +124,15 @@ function Game:initialize(client)
   }
   self.effect = moonshine(moonshine.effects.glow)
   self.effect.glow.strength = 1
-  --self.effect.chromasep.angle = 0
+ -- self.effect.chromasep.angle = 0
   --self.effect.chromasep.radius = 1
 end
 -- Map:draw() Entity:draw() UI:draw()
 offset = 100
+offy = 100
+offx = 100
 function Game:draw()
-  self.effect = moonshine(moonshine.effects.glow)
-  self.effect(function()
-
+  --self.effect = moonshine(moonshine.effects.glow)
   love.graphics.print(#self.data,200, 0)
   love.graphics.print(#self.data[1],200, 10)
   for y=1, #self.data do
@@ -142,30 +145,30 @@ function Game:draw()
 
       love.graphics.setColor(0,255,0)
       --love.graphics.rectangle('line', offset+x*40, offset+y*40, 40, 40)
-      love.graphics.print(self.data[y][x], offset+x*40, offset+y*40)
+      love.graphics.print(self.data[y][x], offx+x*40, offy+y*40)
       if self.data[y][x] == 0 then
 
-      elseif self.data[y][x] == 1 then
+      else
         love.graphics.setColor(255,255,255)
         love.graphics.setLineStyle('rough', 1)
 
         if bits['l'] == 0 then
-          love.graphics.line(offset+x*40, offset+y*40, offset+x*40, offset+(y+1)*40)
+          love.graphics.line(offx+x*40, offy+y*40-0.5, offx+x*40, offy+(y+1)*40+0.5)
         end
         if bits['r'] == 0 then
-          love.graphics.line(offset+(x+1)*40, offset+y*40, offset+(x+1)*40, offset+y*40+40)
+          love.graphics.line(offx+(x+1)*40, offy+y*40-0.5, offx+(x+1)*40, offy+y*40+40+0.5)
         end
         if bits['t'] == 0 then
-          love.graphics.line(offset+x*40, offset+y*40, offset+(x+1)*40, offset+y*40)
+          love.graphics.line(offx+x*40-0.5, offy+y*40, offx+(x+1)*40, offy+y*40)
         end
         if bits['b'] == 0 then
-          love.graphics.line(offset+x*40, offset+(y+1)*40, offset+(x+1)*40, offset+(y+1)*40)
-          love.graphics.line(offset+x*40, offset+(y+1)*40+15, offset+(x+1)*40, offset+(y+1)*40+15)
+          love.graphics.line(offx+x*40-0.5, offy+(y+1)*40, offx+(x+1)*40, offy+(y+1)*40)
+          love.graphics.line(offx+x*40-0.5, offy+(y+1)*40+15, offx+(x+1)*40, offy+(y+1)*40+15)
           if bits['l'] == 0 then
-            love.graphics.line(offset+x*40, offset+(y+1)*40, offset+x*40, offset+(y+1)*40+15)
+            love.graphics.line(offx+x*40, offy+(y+1)*40-0.5, offx+x*40, offy+(y+1)*40+15+0.5)
           end
           if bits['r'] == 0 then
-            love.graphics.line(offset+(x+1)*40, offset+(y+1)*40+15, offset+(x+1)*40, offset+y*40)
+            love.graphics.line(offx+(x+1)*40, offy+(y+1)*40+15-0.5, offx+(x+1)*40, offy+y*40+.5)
           end
         end
 
@@ -196,11 +199,19 @@ function Game:draw()
       end
     end
   end
-  end)
 end
 
 function Game:update(dt)
-
+  if love.keyboard.isDown('w') then
+    offy = offy + dt * 200
+  elseif love.keyboard.isDown('s') then
+    offy = offy - dt * 200
+  end
+  if love.keyboard.isDown('a') then
+    offx = offx + dt * 200
+  elseif love.keyboard.isDown('d') then
+    offx = offx - dt * 200
+  end
 end
 -- When the loader function completes the handshake with the server,
 -- it then recieves information about the map, followed shortly after

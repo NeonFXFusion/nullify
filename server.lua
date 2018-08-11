@@ -11,9 +11,9 @@ function Server:initialize(ip, port, options)
   if options then
     self.options.serverName = options.serverName or 'Server'
     self.options.serverMOTD = options.serverMOTD or 'How are you today?'
-    self.options.maxPlayers = options.maxPlayers or 8
+    self.options.maxPlayers = options.maxPlayers or 6
     self.options.maxSpectators = options.maxSpectators or 2
-    self.options.gameMode = options.maxSpectators or 0 -- 0: FFA, 1: TDM
+    self.options.gameMode = options.gameMode or 0 -- 0: FFA, 1: TDM
     self.options.enforceAuth = options.enforceAuth or false -- weather or not to check for valid session keys from users if disabled user can connect with whatever username they would like
   end
 end

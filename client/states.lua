@@ -23,7 +23,7 @@ local Splash = class('StateSplash', Base)
 
 function Splash:initialize(client)
   Base.initialize(self, 0, client)
-  self.timer = Timer(5, function() client.log:info('Ayy lmao 5 seconds.') end)
+  self.timer = Timer(5, function() client.log:info('Splash finished.') end)
   self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
   self.effect.glow.strength = 10
   self.effect.chromasep.angle = 0.4
@@ -118,7 +118,7 @@ function Game:initialize(client)
     {1,2,0,0,2,0,1},
     {1,2,0,0,2,2,1},
     {1,0,0,0,0,2,1},
-    {1,0,0,0,0,0,1},
+    {1,0,0,2,0,0,1},
     {1,2,0,0,0,2,1},
     {1,1,1,1,1,1,1}
   }
@@ -131,7 +131,7 @@ end
 offset = 100
 offy = 100
 offx = 100
-size = 40
+size = 80
 function Game:draw()
   --self.effect = moonshine(moonshine.effects.glow)
   love.graphics.print(#self.data,200, 0)
@@ -183,20 +183,24 @@ function Game:draw()
           if bits['l'] == 0 and bits['b'] == 0 and bits['r'] ~= 0 and bits['t'] ~= 0 then
             love.graphics.line(offx+x*size, offy+y*size, offx+(x+1)*size, offy+(y+1)*size)
             love.graphics.line(offx+x*size, offy+y*size+size*0.35, offx+(x+1)*size, offy+(y+1)*size+size*0.35)
+            love.graphics.setColor(0, 0, 255)
             love.graphics.line(offx+x*size, offy+y*size, offx+x*size, offy+y*size+size*0.35)
           end
 
-          if bits['l'] == 0 and bits['t'] == 0 then
+          if bits['l'] == 0 and bits['t'] == 0 and bits['r'] ~= 0 then
             love.graphics.line(offx+x*size, offy+(y+1)*size, offx+(x+1)*size, offy+(y)*size)
           end
 
-          if bits['r'] == 0 and bits['b'] == 0 then
+          if bits['r'] == 0 and bits['b'] == 0 and bits['l'] ~= 0 then
             love.graphics.line(offx+x*size, offy+(y+1)*size, offx+(x+1)*size, offy+(y)*size)
+            love.graphics.setColor(255, 0, 255)
             love.graphics.line(offx+x*size, offy+(y+1)*size+size*0.35, offx+(x+1)*size, offy+(y)*size+size*0.35)
+            love.graphics.setColor(0, 255, 255)
             love.graphics.line(offx+(x+1)*size, offy+y*size, offx+(x+1)*size, offy+y*size+size*0.35)
+            love.graphics.setColor(255, 255, 255)
           end
 
-          if bits['r'] == 0 and bits['t'] == 0 then
+          if bits['r'] == 0 and bits['t'] == 0 and bits['b'] ~= 0 then
             love.graphics.line(offx+x*size, offy+y*size, offx+(x+1)*size, offy+(y+1)*size)
           end
         end
@@ -215,6 +219,12 @@ function Game:update(dt)
     offx = offx + dt * 200
   elseif love.keyboard.isDown('d') then
     offx = offx - dt * 200
+  end
+  if love.keyboard.isDown('+') then 
+    size = size + dt * 200
+  elseif love.keyboard.isDown('-') then
+    if size < 10 then return end
+    size = size - dt * 200
   end
 end
 -- When the loader function completes the handshake with the server,

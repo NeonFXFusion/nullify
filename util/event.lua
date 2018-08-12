@@ -21,13 +21,13 @@ function Event.addCallback(obj, ...)
     return error('Event.addCallback: callback can\'t be nil', 2)
   end
     
-  local eventnames = type(...) == 'table' and ... or {...}
+  local names = type(...) == 'table' and ... or {...}
   
-  if #eventnames == 0 then
+  if #names == 0 then
     return error('Event.addCallback: name can\'t be nil', 2)
   end
   
-  for i, name in ipairs(eventnames) do
+  for i, name in ipairs(names) do
     if type(name) == 'string' then
       local eventlist = events[name]
       
@@ -53,13 +53,13 @@ function Event.removeCallback(obj, ...)
     return error('Event.removeCallback: callback can\'t be nil', 2)
   end
   
-  local eventnames = type(...) == 'table' and ... or {...}
+  local names = type(...) == 'table' and ... or {...}
   
-  if #eventnames == 0 then
+  if #names == 0 then
     return error('Event.removeCallback: name can\'t be nil', 2)
   end
   
-  for i, name in ipairs(eventnames) do
+  for i, name in ipairs(names) do
     local eventlist = events[name]
     if eventlist and eventlist[obj] then
       eventlist[obj] = nil
@@ -85,3 +85,5 @@ function Event.lookup(obj)
   
   return registered 
 end
+
+return Event

@@ -1,17 +1,18 @@
 local class = require 'util.middleclass'
 
--- #1 !!!DONE!!! make a config file for love2d to read !!!DONE!!!
+-- #1 make a config file for love2d to read +
 -- #2 make a basic server
 -- #2 basic client
 -- #3 basic visuals for client and server
 -- #4 main menu for client and introduce its game state manager
+-- #4.5 menu is old school hack/console style
 -- #5 expand on menus in the client
 -- #6 begin with basic entity structures
 -- #7 implement entity Player in client and server
 -- #8 add basic packets for movement, damage and chat
 -- #9 make tile structures, basic rendering
 -- #10 create a map generator (look at dungeon generating examples, binary space partitioning?)
--- #11 expand on server/client gui, implement server game state manager
+-- #11 implement server game state manager
 -- #12 implement entity type Projectile, add on-hit events
 -- #13 implement Item class start work on inventory
 -- #14 add basic pickups, basic weapons
@@ -34,6 +35,7 @@ local class = require 'util.middleclass'
 local Client = require 'client'
 local Server = require 'server'
 local Logger = require 'util.logger'
+local Event = require 'util.event'
 
 local log = Logger:new('BASE')
 
@@ -60,10 +62,15 @@ function love.update(dt)
 end
 
 function love.focus(focus)
-  -- body...
+  Event.trigger('WINDOW_FOCUS', focus)
+end
+
+function love.keypressed(key, scancode, isrepeat)
+  Event.trigger('KEY_PRESS', key, scancode, isrepeat)
 end
 
 function love.quit()
+  Event.trigger('WINDOW_QUIT')
   log:info('Quitting :(')
   return false
 end

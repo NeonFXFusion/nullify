@@ -87,6 +87,7 @@ function Load:update(dt)
 end
 
 local Map = require 'util.map'
+local GUI = require 'client.gui'
 
 local Game = class('StateGame', Base)
 
@@ -126,6 +127,7 @@ function Game:initialize(client)
   self.effect.glow.strength = 1
  -- self.effect.chromasep.angle = 0
   --self.effect.chromasep.radius = 1
+  self.gui = GUI:new({{name="MENU", {name="SUB"}, {name="SUB", {name="SUUB"}, {name="SUUB"}}, {name="SUB"}},{name="MENU", {name="SUB"}},{name="MENU"}})
 end
 -- Map:draw() Entity:draw() UI:draw()
 offset = 100
@@ -134,6 +136,7 @@ offx = 100
 size = 80
 function Game:draw()
   --self.effect = moonshine(moonshine.effects.glow)
+  self.gui:draw()
   love.graphics.print(#self.data,200, 0)
   love.graphics.print(#self.data[1],200, 10)
   for y=1, #self.data do
@@ -210,6 +213,7 @@ function Game:draw()
 end
 
 function Game:update(dt)
+  self.gui:update(dt)
   if love.keyboard.isDown('w') then
     offy = offy + dt * 200
   elseif love.keyboard.isDown('s') then

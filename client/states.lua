@@ -1,5 +1,6 @@
 local class = require 'util.middleclass'
 local moonshine = require 'client.moonshine'
+local event = require 'util.event'
 
 local State = {}
 
@@ -15,6 +16,7 @@ function Base:initialize(id, client)
 end
 
 function Base:draw() end
+function Base:on(...) end
 function Base:update(dt) end
 
 local Timer = require 'util.timer'
@@ -29,29 +31,33 @@ function Splash:initialize(client)
   self.effect.chromasep.angle = 0.4
   self.effect.chromasep.radius = 1.5
   self.effect.scanlines.thickness = 0.4
+  event.addCallback(self, 'resize')
 end
 
 function Splash:draw()
   -- opacity +=
-  self.effect(function()
     local prevf = love.graphics.getFont()
     love.graphics.setFont(love.graphics.setNewFont('res/font/main.ttf', 60))
-    love.graphics.printf("NULLIFY", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    self.effect(function()
+      love.graphics.printf("NULLIFY", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+    end)
     love.graphics.setFont(prevf)
-  end)
+end
+
+function Splash:on(name, ...)
+  if name == 'resize' then
+    
+  end
 end
 
 function Splash:update(dt)
   if true then
-    self.effect.glow.strength = 10
-    self.effect.chromasep.angle = 0.4
-    self.effect.chromasep.radius = 1.5
-    self.effect.scanlines.thickness = 0.4
     self.effect.scanlines.phase = self.timer:elapsed() / 15
   end
   if self.timer == nil then return end
   if self.timer:finished() then
-    local state = State.Game:new(self.client)
+    local state = State.Menu:new(self.client)
+    event.removeCallback(self, 'resize')
     self.client:setState(state)
     -- self.timer.destroy()
     -- push Load state with a function that reads the config and then pushes
@@ -86,8 +92,27 @@ function Load:update(dt)
   end
 end
 
-local Map = require 'util.map'
 local GUI = require 'client.gui'
+
+local Menu = class('StateMenu', Base)
+
+function Menu:initialize(client)
+  Base.initialize(self, 1, client)
+  -- make menu load from file
+  self.gui = GUI:new({{i="1", name="CONNECT"}, {i="1.1", name="AUTO"}, {i="1.2", name="CUSTOM"}, {i="1.2.1", name="SUUB0"}, {i="2", name="HOST"},{i="3", name="OPTIONS"},{i="4", name="EXIT"}})
+
+end
+
+function Menu:draw()
+  self.gui:draw()
+end
+
+function Menu:update(dt)
+  self.gui:update(dt)
+end
+
+local Map = require 'util.map'
+local binds = require 'util.binds'
 
 local Game = class('StateGame', Base)
 
@@ -123,11 +148,10 @@ function Game:initialize(client)
     {1,2,0,0,0,2,1},
     {1,1,1,1,1,1,1}
   }
-  self.effect = moonshine(moonshine.effects.glow)
-  self.effect.glow.strength = 1
- -- self.effect.chromasep.angle = 0
-  --self.effect.chromasep.radius = 1
-  self.gui = GUI:new({{name="MENU", {name="SUB"}, {name="SUB", {name="SUUB"}, {name="SUUB"}}, {name="SUB"}},{name="MENU", {name="SUB"}},{name="MENU"}})
+  self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.chromasep)
+  self.effect.glow.strength = 2
+  --self.effect.chromasep.angle = 0
+  self.effect.chromasep.radius = 1
 end
 -- Map:draw() Entity:draw() UI:draw()
 offset = 100
@@ -135,8 +159,7 @@ offy = 100
 offx = 100
 size = 80
 function Game:draw()
-  --self.effect = moonshine(moonshine.effects.glow)
-  self.gui:draw()
+  --self.effect(function()
   love.graphics.print(#self.data,200, 0)
   love.graphics.print(#self.data[1],200, 10)
   for y=1, #self.data do
@@ -210,18 +233,18 @@ function Game:draw()
       end
     end
   end
+  --end)
 end
 
 function Game:update(dt)
-  self.gui:update(dt)
-  if love.keyboard.isDown('w') then
+  if binds.active('up') then
     offy = offy + dt * 200
-  elseif love.keyboard.isDown('s') then
+  elseif binds.active('down') then
     offy = offy - dt * 200
   end
-  if love.keyboard.isDown('a') then
+  if binds.active('left') then
     offx = offx + dt * 200
-  elseif love.keyboard.isDown('d') then
+  elseif binds.active('right') then
     offx = offx - dt * 200
   end
   if love.keyboard.isDown('+') then 

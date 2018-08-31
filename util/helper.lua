@@ -1,14 +1,26 @@
-function string:split(delimiter)
-  local result = { }
-  local from  = 1
-  local delim_from, delim_to = string.find( self, delimiter, from  )
-  while delim_from do
-    table.insert( result, string.sub( self, from , delim_from-1 ) )
-    from  = delim_to + 1
-    delim_from, delim_to = string.find( self, delimiter, from  )
-  end
-  table.insert( result, string.sub( self, from  ) )
-  return result
+function string:split(sSeparator, nMax, bRegexp)
+   assert(sSeparator ~= '')
+   assert(nMax == nil or nMax >= 1)
+
+   local aRecord = {}
+
+   if self:len() > 0 then
+      local bPlain = not bRegexp
+      nMax = nMax or -1
+
+      local nField, nStart = 1, 1
+      local nFirst,nLast = self:find(sSeparator, nStart, bPlain)
+      while nFirst and nMax ~= 0 do
+         aRecord[nField] = self:sub(nStart, nFirst-1)
+         nField = nField+1
+         nStart = nLast+1
+         nFirst,nLast = self:find(sSeparator, nStart, bPlain)
+         nMax = nMax-1
+      end
+      aRecord[nField] = self:sub(nStart)
+   end
+
+   return aRecord
 end
 
 function string:starts(start)
@@ -17,6 +29,10 @@ end
 
 function string:ends(last)
    return last=='' or string.sub(self,-string.len(last))==last
+end
+
+function string:count(pattern)
+    return select(2, string.gsub(self, pattern, ""))
 end
 
 function table.copy( t, ... )
@@ -49,4 +65,21 @@ function table.copy( t, ... )
 	end
 
 	return result
+end
+
+function table.print(tbl, indent)
+  if not indent then indent = 0 end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      table.print(v, indent+1)
+    elseif type(v) == 'boolean' then
+      print(formatting .. tostring(v))      
+    elseif type(v) == 'function' then
+      print(formatting .. tostring(v))      
+    else
+      print(formatting .. v)
+    end
+  end
 end

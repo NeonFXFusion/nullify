@@ -1,3 +1,5 @@
+config = {}
+
 function love.conf(t)
     t.identity = "res/save"                    -- The name of the save directory (string)
     t.version = "11.0"                -- The LÖVE version this game was made for (string)
@@ -5,7 +7,7 @@ function love.conf(t)
     t.accelerometerjoystick = false      -- Enable the accelerometer on iOS and Android by exposing it as a Joystick (boolean)
     t.gammacorrect = false              -- Enable gamma-correct rendering, when supported by the system (boolean)
 
-    t.window.title = "Nullify - Version 0.1D"         -- The window title (string)
+    t.window.title = "Nullify - dev0.2"         -- The window title (string)
     t.window.icon = nil                 -- Filepath to an image to use as the window's icon (string)
     t.window.width = 800                -- The window width (number)
     t.window.height = 600               -- The window height (number)
@@ -38,4 +40,7 @@ function love.conf(t)
     t.modules.video = false              -- Enable the video module (boolean)
     t.modules.window = true             -- Enable the window module (boolean)
     t.modules.thread = true             -- Enable the thread module (boolean)
+    config = t
 end
+
+return config

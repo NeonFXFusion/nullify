@@ -1,30 +1,32 @@
-Event = {}
+event = {}
+
+require 'util.helper'
 
 local events = {}
 
-function Event.trigger(name, ...)
+function event.trigger(name, ...)
   local eventlist = events[name] or {}
 
   for obj, callback in pairs(eventlist) do
     if type(obj) == 'function' then
       obj(name, ...)
     elseif obj[name] then
-      obj[name](obj, name, ...)
+      obj[name](...)
     elseif obj.on then
       obj:on(name, ...)
     end
   end
 end
 
-function Event.addCallback(obj, ...)
+function event.addCallback(obj, ...)
   if not obj then
-    return error('Event.addCallback: callback can\'t be nil', 2)
+    return error('event.addCallback: callback can\'t be nil', 2)
   end
     
   local names = type(...) == 'table' and ... or {...}
   
   if #names == 0 then
-    return error('Event.addCallback: name can\'t be nil', 2)
+    return error('event.addCallback: name can\'t be nil', 2)
   end
   
   for i, name in ipairs(names) do
@@ -37,7 +39,7 @@ function Event.addCallback(obj, ...)
       end
       
       if type(obj) ~= 'function' and type(obj) ~= 'table' then
-        return error('Event.addCallback: callback object isn\'t a table or function', 2)
+        return error('event.addCallback: callback object isn\'t a table or function', 2)
       end
       
       eventlist[obj] = true
@@ -48,15 +50,15 @@ function Event.addCallback(obj, ...)
   return obj
 end
 
-function Event.removeCallback(obj, ...)
+function event.removeCallback(obj, ...)
   if not obj then
-    return error('Event.removeCallback: callback can\'t be nil', 2)
+    return error('event.removeCallback: callback can\'t be nil', 2)
   end
   
   local names = type(...) == 'table' and ... or {...}
   
   if #names == 0 then
-    return error('Event.removeCallback: name can\'t be nil', 2)
+    return error('event.removeCallback: name can\'t be nil', 2)
   end
   
   for i, name in ipairs(names) do
@@ -67,9 +69,9 @@ function Event.removeCallback(obj, ...)
   end
 end
 
-function Event.lookup(obj)
+function event.lookup(obj)
   if type(obj) ~= 'table' and type(obj) ~= 'function' then
-    return error('Event.lookup: callback object isn\'t table or function', 2)
+    return error('event.lookup: callback object isn\'t table or function', 2)
   end
   
   local registered = {}
@@ -86,4 +88,4 @@ function Event.lookup(obj)
   return registered 
 end
 
-return Event
+return event

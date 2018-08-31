@@ -35,7 +35,10 @@ local class = require 'util.middleclass'
 local Client = require 'client'
 local Server = require 'server'
 local Logger = require 'util.logger'
-local Event = require 'util.event'
+local event = require 'util.event'
+
+require 'conf'
+require 'util.helper'
 
 local log = Logger:new('BASE')
 
@@ -43,14 +46,18 @@ function love.load()
   log:info('Loading...')
   -- TODO: if any console arguments intended for client pass them through
   love.client = Client:new()
-  -- injected handlers for starting and stopping the internal server
-  love.handlers.serverstart = function(ip, port, options)
 
-  end
-  love.handlers.serverstop = function()
-
-  end
+  log:info('Injecting custom globals...')
+  love.graphics.scalex = function() return love.graphics.getWidth()/config.window.width end
+  love.graphics.scaley = function() return love.graphics.getHeight()/config.window.height end
+  
+  log:info('Registering event callbacks...')
+  event.addCallback(love, 'appQuit')
   log:info('Done loading.')
+end
+
+function love.appQuit(quit)
+  if quit then love.event.quit() end
 end
 
 function love.draw()
@@ -62,15 +69,15 @@ function love.update(dt)
 end
 
 function love.focus(focus)
-  Event.trigger('WINDOW_FOCUS', focus)
+  event.trigger('focus', focus)
 end
 
-function love.keypressed(key, scancode, isrepeat)
-  Event.trigger('KEY_PRESS', key, scancode, isrepeat)
+function love.resize(w, h)
+  event.trigger('resize', w, h)
 end
 
 function love.quit()
-  Event.trigger('WINDOW_QUIT')
+  event.trigger('appQuit', false)
   log:info('Quitting :(')
   return false
 end

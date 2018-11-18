@@ -43,9 +43,25 @@ function GUI:initialize(structure)
   self.effect.scanlines.thickness = 0.4
 end
 
+function GUI:loadfile(name)
+  local ok, chunk, result
+  ok, chunk = pcall( love.filesystem.load, name ) -- load the chunk safely
+  if not ok then
+    print('The following error happend: ' .. tostring(chunk))
+  else
+    ok, result = pcall(chunk) -- execute the chunk safely
+   
+    if not ok then -- will be false if there is an error
+      print('The following error happened: ' .. tostring(result))
+    else
+      print('The result of loading is: ' .. tostring(result))
+    end
+  end
+end
+
 function GUI:draw()
   local prevf = love.graphics.getFont()
-  local sizef = 24*math.min(love.graphics.scalex(), love.graphics.scaley())
+  local sizef = 24*love.graphics.scale()
   love.graphics.setFont(love.graphics.setNewFont('res/font/main.ttf', sizef))
   local i = 1-1
   --self.effect(function()
@@ -61,7 +77,7 @@ end
 
 
 function GUI:update(dt)
-  self.effect.chromasep.radius = 2*math.min(love.graphics.scalex(), love.graphics.scaley())
+  self.effect.chromasep.radius = 2*love.graphics.scale()
   self.effect.scanlines.phase = math.random()*10
 end
 

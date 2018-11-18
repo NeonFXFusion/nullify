@@ -48,9 +48,8 @@ function love.load()
   love.client = Client:new()
 
   log:info('Injecting custom globals...')
-  love.graphics.scalex = function() return love.graphics.getWidth()/config.window.width end
-  love.graphics.scaley = function() return love.graphics.getHeight()/config.window.height end
-  
+  love.graphics.scale = function() return math.min(love.graphics.getWidth()/config.window.width, love.graphics.getHeight()/config.window.height) end
+
   log:info('Registering event callbacks...')
   event.addCallback(love, 'appQuit')
   log:info('Done loading.')

@@ -29,12 +29,8 @@ binds = {
   }
 }
 
-binds.add = function(action, key)
-
-end
-
-binds.remove = function(action, key)
-
+binds.set = function(action, key)
+  
 end
 
 binds.active = function(action)

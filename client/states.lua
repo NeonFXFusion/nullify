@@ -29,24 +29,29 @@ function Splash:initialize(client)
   self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
   self.effect.glow.strength = 10
   self.effect.chromasep.angle = 0.4
-  self.effect.chromasep.radius = 1.5
+  self.effect.chromasep.radius = 2
   self.effect.scanlines.thickness = 0.4
   event.addCallback(self, 'resize')
 end
 
 function Splash:draw()
   -- opacity +=
-    local prevf = love.graphics.getFont()
-    love.graphics.setFont(love.graphics.setNewFont('res/font/main.ttf', 60))
-    self.effect(function()
-      love.graphics.printf("NULLIFY", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
-    end)
-    love.graphics.setFont(prevf)
+  if self.timer:elapsed() < 500 or self.timer:elapsed() > 4500 then return end
+  local prevf = love.graphics.getFont()
+  love.graphics.setFont(love.graphics.setNewFont('res/font/main.ttf', 60))
+  self.effect(function()
+    love.graphics.printf("NULLIFY", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+  end)
+  love.graphics.setFont(prevf)
 end
 
 function Splash:on(name, ...)
   if name == 'resize' then
-    
+    self.effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.scanlines).chain(moonshine.effects.chromasep)
+    self.effect.glow.strength = 10
+    self.effect.chromasep.angle = 0.4
+    self.effect.chromasep.radius = 1.5*love.graphics.scale()
+    self.effect.scanlines.thickness = 0.4
   end
 end
 

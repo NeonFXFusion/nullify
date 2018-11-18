@@ -27,14 +27,14 @@ function Client:setState(state)
 end
 
 function Client:draw()
+  if self.gameState.class.super == states.Base then
+    self.gameState:draw()
+  end
   if debug then
     love.graphics.print('FPS: '..love.timer.getFPS(),0, 0)
     love.graphics.print('FDT: '..love.timer.getDelta(),0, 12)
     love.graphics.print('STATE: '..self.gameState.class.name,0, 12*2)
     love.graphics.print('MEM: '..(collectgarbage("count")*1024),0, 12*3)
-  end
-  if self.gameState.class.super == states.Base then
-    self.gameState:draw()
   end
 end
 
